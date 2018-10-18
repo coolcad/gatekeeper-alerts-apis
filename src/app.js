@@ -1,15 +1,16 @@
 const express = require("express");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
-const logger = require("morgan");
-
+const morgan = require("morgan");
 const indexRouter = require("./routes/index");
 const apiRoutes = require("./routes/apiRoutes");
 
 const app = express();
 app.use(helmet());
 
-app.use(logger("dev"));
+app.use(morgan("dev"));
+require("./helpers/logger");
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
