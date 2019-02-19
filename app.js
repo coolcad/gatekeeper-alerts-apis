@@ -18,4 +18,8 @@ app.use(cookieParser());
 app.use("/", indexRoutes);
 app.use("/api", apiRoutes);
 
+process.on("uncaughtException", function(err) {
+  console.log("Caught exception: " + err);
+});
+
 module.exports = app;
