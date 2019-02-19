@@ -13,7 +13,20 @@ describe("Application is responsive", () => {
     expect(response.statusCode).toBe(200);
   });
 });
-describe("POST /alerts/send", () => {
+
+describe("POST /api/v1/alerts/send", () => {
+  it("should fail with req body validation", async () => {
+    const response = await request(app)
+      .post(v1Routes.alerts.send)
+      .send({
+        alertName: "Test",
+        alertMessage: "Test",
+        deliveryMethods: ["email"]
+      });
+
+    expect(response.status).toBe(400);
+  });
+
   it("should send an email", async () => {
     const response = await request(app)
       .post(v1Routes.alerts.send)
