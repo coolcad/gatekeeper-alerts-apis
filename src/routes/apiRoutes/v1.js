@@ -13,20 +13,25 @@ const { celebrate, Joi, errors } = require("celebrate");
 const emailControllers = require("../../controllers/v1/emailControllers");
 
 router.post(
-  "/email",
+  "/alerts/send",
   bruteforce.prevent,
   celebrate({
     body: Joi.object().keys({
       alertName: Joi.string().required(),
       alertMessage: Joi.string().required(),
-      receivers: Joi.array().items(
-        Joi.object().keys({
-          name: Joi.string(),
-          email: Joi.string()
-            .email()
-            .required()
-        })
-      )
+      deliveryMethods: Joi.array()
+        .items(Joi.string().valid("sms", "email"))
+        .required(),
+      receivers: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: Joi.string(),
+            email: Joi.string()
+              .email()
+              .required()
+          })
+        )
+        .required()
     })
   }),
   async (req, res, next) => {
