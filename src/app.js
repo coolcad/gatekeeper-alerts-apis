@@ -2,7 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-const indexRouter = require("./routes/index");
+const indexRouter = require("./routes");
 const apiRoutes = require("./routes/apiRoutes");
 const { errors } = require("celebrate");
 
@@ -21,5 +21,9 @@ app.use("/", indexRouter);
 app.use("/api", apiRoutes);
 
 app.use(errors());
+
+process.on("uncaughtException", function(err) {
+  console.log("Caught exception: " + err);
+});
 
 module.exports = app;

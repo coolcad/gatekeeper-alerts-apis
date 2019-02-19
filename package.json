@@ -5,9 +5,12 @@
   "scripts": {
     "dev": "nodemon -r dotenv/config ./src/bin/www",
     "start": "pm2 start ./src/bin/www",
-    "debug": "node --nolazy --inspect-brk=9229 ./src/bin/www"
+    "debug": "node --nolazy --inspect-brk=9229 ./src/bin/www",
+    "test": "jest --watch",
+    "test:coverage": "jest --collectCoverage"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "celebrate": "^9.0.2",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
@@ -26,6 +29,7 @@
   "devDependencies": {
     "dotenv": "^6.1.0",
     "jest": "^24.1.0",
-    "nodemon": "^1.18.10"
+    "nodemon": "^1.18.10",
+    "supertest": "^3.4.2"
   }
 }

@@ -38,7 +38,6 @@ router.post(
     try {
       const alert = req.body;
       await emailControllers.sendAlertEmail(alert);
-      logger.info("Email alert sent");
       return res.status(200).send({
         type: "SUCCESS",
         message: "Successfully sent email alert"

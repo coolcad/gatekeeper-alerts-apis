@@ -1,5 +1,4 @@
 const mailer = require("../../helpers/mailer");
-const logger = require("winston");
 const path = require("path");
 const pug = require("pug");
 
