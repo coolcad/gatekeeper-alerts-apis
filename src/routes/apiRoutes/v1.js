@@ -9,66 +9,43 @@ const logger = require("winston");
 
 const store = new ExpressBrute.MemoryStore(); // stores state locally, don't use this in production
 const bruteforce = new ExpressBrute(store);
+const { celebrate, Joi, errors } = require("celebrate");
+const emailControllers = require("../../controllers/v1/emailControllers");
 
-/* GET home page. */
-router.get("/", bruteforce.prevent, (req, res, next) => {
-  logger.info("Test");
-  res.send("Welcome to GateKeeper v1 APIs");
-});
-
-router.post("/email", bruteforce.prevent, async (req, res, next) => {
-  try {
-    const alert = req.body;
-
-    if (!alert) {
-      res.status(400).send({
-        type: "ERROR",
-        message:
-          "Please send alert with format {receiverEmail, receiverName, alertName, alertMessage} in body"
+router.post(
+  "/email",
+  bruteforce.prevent,
+  celebrate({
+    body: Joi.object().keys({
+      alertName: Joi.string().required(),
+      alertMessage: Joi.string().required(),
+      receivers: Joi.array().items(
+        Joi.object().keys({
+          name: Joi.string(),
+          email: Joi.string()
+            .email()
+            .required()
+        })
+      )
+    })
+  }),
+  async (req, res, next) => {
+    try {
+      const alert = req.body;
+      await emailControllers.sendAlertEmail(alert);
+      logger.info("Email alert sent");
+      return res.status(200).send({
+        type: "SUCCESS",
+        message: "Successfully sent email alert"
       });
-      return;
+    } catch (error) {
+      logger.error(error.message);
+      return res.status(400).send({
+        type: "ERROR",
+        message: error.message
+      });
     }
-
-    const emailHtml = pug.renderFile(
-      path.resolve(__dirname, "..", "..", "templates", "emailAlert.pug"),
-      alert
-    );
-
-    const options = mailer.createEmailOptions({
-      receiverEmail: alert.receiverEmail,
-      subject: `GateKeeper Alert Notification: ${
-        alert.alertName
-      } generated at ${new Date().toString()}`,
-      html: emailHtml
-    });
-
-    await mailer.sendMail(options, err => {
-      if (!err) {
-        res.status(200).send({
-          type: "SUCCESS",
-          message: `Email Alert sent to ${alert.receiverEmail}`
-        });
-        return;
-      } else {
-        res.status(400).send({
-          type: "ERROR",
-          message: err.message
-        });
-        return;
-      }
-    });
-    // res.status(200).send({
-    //   type: "SUCCESS",
-    //   message: `Email Alert sent to ${alert.receiverEmail}`
-    // });
-    return;
-  } catch (error) {
-    res.status(400).send({
-      type: "ERROR",
-      message: error.message
-    });
-    return;
   }
-});
+);
 
 module.exports = router;

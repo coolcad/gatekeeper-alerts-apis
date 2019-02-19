@@ -8,6 +8,7 @@
     "debug": "node --nolazy --inspect-brk=9229 ./src/bin/www"
   },
   "dependencies": {
+    "celebrate": "^9.0.2",
     "cookie-parser": "~1.4.3",
     "cors": "^2.8.4",
     "debug": "~4.1.0",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "dotenv": "^6.1.0",
+    "jest": "^24.1.0",
     "nodemon": "^1.18.10"
   }
 }

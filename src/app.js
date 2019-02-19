@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const indexRouter = require("./routes/index");
 const apiRoutes = require("./routes/apiRoutes");
+const { errors } = require("celebrate");
 
 const app = express();
 app.use(helmet());
@@ -18,5 +19,7 @@ app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/api", apiRoutes);
+
+app.use(errors());
 
 module.exports = app;

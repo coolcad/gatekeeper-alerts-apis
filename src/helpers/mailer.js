@@ -35,9 +35,6 @@ let transporter = nodemailer.createTransport({
 });
 
 const sendMail = (opts, cb) => {
-  // mailer = require("util").promisify(transporter.sendMail);
-  // return await mailer(opts);
-
   const mailer = transporter.sendMail(opts, err => {
     if (err) {
       logger.error(err);
