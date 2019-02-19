@@ -1,6 +1,7 @@
 const nodemailer = require("nodemailer");
 const xoauth2 = require("xoauth2");
 const config = require("../config/config");
+const logger = require("winston");
 
 // console.log("TCL: config.xoauth2Options", config.xoauth2Options);
 // const oauthGenerator = xoauth2.createXOAuth2Generator({
@@ -46,16 +47,6 @@ const sendMail = (opts, cb) => {
   });
 };
 
-const createEmailOptions = options => {
-  return {
-    from: `GateKeeper Alerts <${process.env.ALERTS_EMAIL_ID}>`,
-    to: options.receiverEmail,
-    subject: options.subject,
-    html: options.html
-  };
-};
-
 module.exports = {
-  sendMail,
-  createEmailOptions
+  sendMail
 };
