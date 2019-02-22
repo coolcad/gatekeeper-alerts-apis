@@ -1,6 +1,7 @@
 const mailer = require("../../helpers/mailer");
 const path = require("path");
 const pug = require("pug");
+const moment = require("moment");
 
 const emailControllers = {};
 
@@ -12,6 +13,9 @@ emailControllers.sendAlertEmail = async alert => {
     "templates",
     "emailAlert.pug"
   );
+
+  const alertDateTime = alert.alertLogs[0].alertDateTime;
+
   const emailHtml = pug.renderFile(emailTemplatePath, {
     name: alert.alertName,
     message: alert.alertMessage

@@ -22,6 +22,16 @@ router.post(
       deliveryMethods: Joi.array()
         .items(Joi.string().valid("sms", "email"))
         .required(),
+      alertLogs: Joi.array().items(
+        Joi.object().keys({
+          alertDateTime: Joi.date()
+            .iso()
+            .required(),
+          eventType: Joi.string().required(),
+          computerName: Joi.string().required(),
+          userName: Joi.string()
+        })
+      ),
       receivers: Joi.array()
         .items(
           Joi.object().keys({

@@ -34,6 +34,14 @@ describe("POST /api/v1/alerts/send", () => {
         alertName: "Test",
         alertMessage: "Test",
         deliveryMethods: ["email"],
+        alertLogs: [
+          {
+            alertDateTime: "2019-02-22T11:38:08.2867789-05:00",
+            eventType: "Service Started",
+            computerName: "DEVELOPER",
+            userName: "N/A"
+          }
+        ],
         receivers: [
           {
             name: "Sai",
