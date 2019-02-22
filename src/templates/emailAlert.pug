@@ -5,6 +5,72 @@ html(lang="en")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title GateKeeper Alert
+    style.
+      body {
+        padding: 20px;
+        background: #F1F1F1;
+        color: #263746;
+      }
+      .alertTitle {
+        font-size: 23px;
+      }
+      .alertName {
+        padding: 0 0 0 10px;
+      }
+      .divider {
+        padding: 5px 0 5px 0;
+      }
+      th {
+        color: #263746;
+      }
+      .alertDescription{
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .alertFooter {
+        font-size: 14px;
+      }
+      .table {
+        border-collapse: collapse;
+      }
+      table.details-table, .details-table th, .details-table td {
+        border: 1px solid #263746;
+      }
+
+      .details-table th, .details-table td {
+        padding: 10px;
+      }
+      .text-danger {
+        color: #DC3545;
+      }
   body
-    h1 #{name}
-    h5 #{message}
+    //- img(src="https://gkreports.blob.core.windows.net/imagesforreports/icons/GKLogo.png")
+    table.w-100
+      thead
+        th.text-danger.alertTitle
+          | Alert:
+          span.alertName= alert.alertName
+    div.divider
+    div.divider
+    div.alertDescription An alert has been generated in your organization's GateKeeper System. The following table has information to identify the condition and location that caused the alert.
+    div.divider
+    div.divider
+    div.divider
+    table.table.details-table
+      thead
+        th(width="25%") Timestamp
+        th(width="25%") Computer Name
+        th(width="25%") User Name
+        th(width="25%") Event
+      tbody
+        each log in alert.alertLogs
+          td(width="25%")= new Date(log.alertDateTime).toLocaleDateString() + " " +new Date(log.alertDateTime).toLocaleTimeString()
+          td(width="25%")= log.computerName
+          td(width="25%")= log.userName
+          td(width="25%")= log.eventType
+  
+  div.divider
+  div.divider
+  div.divider
+  div.divider
+  div.alertFooter Protip: You can check the logs of the alert in your GateKeeper Hub at Logs -> Alert Logs.

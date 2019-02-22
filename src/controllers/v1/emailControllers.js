@@ -14,18 +14,11 @@ emailControllers.sendAlertEmail = async alert => {
     "emailAlert.pug"
   );
 
-  const alertDateTime = alert.alertLogs[0].alertDateTime;
-
-  const emailHtml = pug.renderFile(emailTemplatePath, {
-    name: alert.alertName,
-    message: alert.alertMessage
-  });
+  const emailHtml = pug.renderFile(emailTemplatePath, { alert });
   const emailOptions = {
     from: `GateKeeper Alerts <${process.env.ALERTS_EMAIL_ID}>`,
     to: alert.receivers.map(x => x.email.trim()),
-    subject: `GateKeeper Alert Notification: ${
-      alert.alertName
-    } generated at ${new Date().toString()}`,
+    subject: `GateKeeper Alert: ${alert.alertName}`,
     html: emailHtml
   };
   await mailer.sendMail(emailOptions, err => {
