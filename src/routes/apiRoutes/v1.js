@@ -38,7 +38,10 @@ router.post(
             name: Joi.string(),
             email: Joi.string()
               .email()
-              .required()
+              .required(),
+            phoneNumber: Joi.string()
+              .allow(null)
+              .optional()
           })
         )
         .required()
