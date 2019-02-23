@@ -11,46 +11,18 @@ const store = new ExpressBrute.MemoryStore(); // stores state locally, don't use
 const bruteforce = new ExpressBrute(store);
 const { celebrate, Joi, errors } = require("celebrate");
 const emailControllers = require("../../controllers/v1/emailControllers");
+const validators = require("./validators");
 
 router.post(
   "/alerts/send",
   bruteforce.prevent,
-  celebrate({
-    body: Joi.object().keys({
-      alertName: Joi.string().required(),
-      alertMessage: Joi.string().required(),
-      deliveryMethods: Joi.array()
-        .items(Joi.string().valid("sms", "email"))
-        .required(),
-      alertLogs: Joi.array().items(
-        Joi.object().keys({
-          alertDateTime: Joi.date()
-            .iso()
-            .required(),
-          eventType: Joi.string().required(),
-          computerName: Joi.string().required(),
-          userName: Joi.string()
-        })
-      ),
-      receivers: Joi.array()
-        .items(
-          Joi.object().keys({
-            name: Joi.string(),
-            email: Joi.string()
-              .email()
-              .required(),
-            phoneNumber: Joi.string()
-              .allow(null)
-              .optional()
-          })
-        )
-        .required()
-    })
-  }),
+  validators.alert(),
   async (req, res, next) => {
     try {
-      const alert = req.body;
-      await emailControllers.sendAlertEmail(alert);
+      const alerts = req.body;
+      alerts.forEach(async alert => {
+        await emailControllers.sendAlertEmail(alert);
+      });
       return res.status(200).send({
         type: "SUCCESS",
         message: "Successfully sent email alert"
