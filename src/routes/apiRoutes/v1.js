@@ -8,14 +8,14 @@ const mailer = require("../../helpers/mailer");
 const logger = require("winston");
 
 const store = new ExpressBrute.MemoryStore(); // stores state locally, don't use this in production
-const bruteforce = new ExpressBrute(store);
+// const bruteforce = new ExpressBrute(store);
 const { celebrate, Joi, errors } = require("celebrate");
 const emailControllers = require("../../controllers/v1/emailControllers");
 const validators = require("./validators");
 
 router.post(
   "/alerts/send",
-  bruteforce.prevent,
+  // bruteforce.prevent,
   validators.alert(),
   async (req, res, next) => {
     try {
