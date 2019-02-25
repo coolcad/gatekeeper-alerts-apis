@@ -1,7 +1,6 @@
 const nodemailer = require("nodemailer");
-const xoauth2 = require("xoauth2");
-const config = require("../config/config");
 const logger = require("winston");
+const config = require("../config/config");
 
 // console.log("TCL: config.xoauth2Options", config.xoauth2Options);
 // const oauthGenerator = xoauth2.createXOAuth2Generator({
@@ -23,7 +22,7 @@ const logger = require("winston");
 //   }
 // });
 
-let transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     type: "OAuth2",
@@ -36,7 +35,7 @@ let transporter = nodemailer.createTransport({
 });
 
 const sendMail = (opts, cb) => {
-  const mailer = transporter.sendMail(opts, err => {
+  transporter.sendMail(opts, err => {
     if (err) {
       logger.error(err);
     } else {

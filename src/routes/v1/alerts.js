@@ -1,14 +1,12 @@
 const express = require("express");
+
 const router = express.Router();
-const pug = require("pug");
-const path = require("path");
-const mailer = require("../../helpers/mailer");
 const logger = require("winston");
-const { celebrate, Joi, errors } = require("celebrate");
-const emailControllers = require("../../controllers/v1/emailControllers");
+const emailControllers = require("../../controllers/v1/alerts/emailControllers");
 const validators = require("./validators");
 
-router.post("/alerts/send", validators.alert(), async (req, res, next) => {
+// POST /api/v1/alerts/send
+router.post("/send", validators.alert(), async (req, res) => {
   try {
     const alerts = req.body;
     alerts.forEach(async alert => {

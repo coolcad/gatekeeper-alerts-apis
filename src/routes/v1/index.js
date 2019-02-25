@@ -1,7 +1,8 @@
 const express = require("express");
-const router = express.Router();
-const v1Routes = require("./v1");
 
-router.use("/v1", v1Routes);
+const router = express.Router();
+
+// Routes for /api/v1/alerts
+router.use("/alerts", require("./alerts"));
 
 module.exports = router;

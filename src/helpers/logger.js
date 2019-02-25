@@ -1,12 +1,10 @@
 const winston = require("winston");
 
-const { combine, timestamp, label, prettyPrint, printf } = winston.format;
+const { combine, timestamp, prettyPrint, printf } = winston.format;
 require("winston-daily-rotate-file");
 
 // Define your custom format with printf.
-const myFormat = printf(
-  info => `${new Date(info.timestamp)}: ${info.level}: ${info.message}`
-);
+const myFormat = printf(info => `${new Date(info.timestamp)}: ${info.level}: ${info.message}`);
 
 const rotateTransport = new winston.transports.DailyRotateFile({
   filename: "./logs/%DATE%.log",
@@ -18,17 +16,14 @@ const rotateTransport = new winston.transports.DailyRotateFile({
   level: "info"
 });
 
-rotateTransport.on("rotate", (oldFilename, newFilename) => {
-  console.log(new Date(), oldFilename, newFilename);
-});
-
 const logger = winston.createLogger({
   format: combine(timestamp(), prettyPrint(), myFormat),
-  transports: [
-    rotateTransport,
-    new winston.transports.Console({ handleExceptions: true })
-  ],
+  transports: [rotateTransport, new winston.transports.Console({ handleExceptions: true })],
   exitOnError: false
+});
+
+rotateTransport.on("rotate", (oldFilename, newFilename) => {
+  logger.info(new Date(), oldFilename, newFilename);
 });
 
 winston.add(logger);

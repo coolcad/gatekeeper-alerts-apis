@@ -14,6 +14,13 @@ describe("Application is responsive", () => {
   });
 });
 
+describe("Invalid Route is 404", () => {
+  it("GET /doesnotexist", async () => {
+    const response = await request(app).get("/doesnotexist");
+    expect(response.statusCode).toBe(404);
+  });
+});
+
 describe("POST /api/v1/alerts/send", () => {
   it("should fail with req body validation", async () => {
     const response = await request(app)
@@ -30,25 +37,27 @@ describe("POST /api/v1/alerts/send", () => {
   it("should send an email", async () => {
     const response = await request(app)
       .post(v1Routes.alerts.send)
-      .send([{
-        alertName: "Test",
-        alertMessage: "Test",
-        deliveryMethods: ["email"],
-        alertLogs: [
-          {
-            alertDateTime: "2019-02-22T11:38:08.2867789-05:00",
-            eventType: "Service Started",
-            computerName: "DEVELOPER",
-            userName: "N/A"
-          }
-        ],
-        receivers: [
-          {
-            name: "Sai",
-            email: "sai@gkaccess.com"
-          }
-        ]
-      }]);
+      .send([
+        {
+          alertName: "Test",
+          alertMessage: "Test",
+          deliveryMethods: ["email"],
+          alertLogs: [
+            {
+              alertDateTime: "2019-02-22T11:38:08.2867789-05:00",
+              eventType: "Service Started",
+              computerName: "DEVELOPER",
+              userName: "N/A"
+            }
+          ],
+          receivers: [
+            {
+              name: "Sai",
+              email: "sai@gkaccess.com"
+            }
+          ]
+        }
+      ]);
 
     expect(response.status).toBe(200);
   });

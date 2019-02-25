@@ -2,18 +2,15 @@ const express = require("express");
 const helmet = require("helmet");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-const indexRouter = require("./routes");
-const apiRoutes = require("./routes/apiRoutes");
 const { errors } = require("celebrate");
 const rateLimit = require("express-rate-limit");
+const logger = require("winston");
+const routes = require("./routes");
 
 const app = express();
-app.use(helmet());
 
-const apiRateLimit = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 100
-});
+// Prevent common attacks from bad headers
+app.use(helmet());
 
 app.use(morgan("dev"));
 require("./helpers/logger");
@@ -21,17 +18,26 @@ require("./helpers/logger");
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
 
-app.use("/", apiRateLimit);
-app.use("/", indexRouter);
-app.use("/api", apiRateLimit);
-app.use("/api", apiRoutes);
+// API Request rate limiter. Used to prevent brute-force attacks
+const apiRateLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // Max 100 requests from one IP in 10 minutes.
+  max: 100 // Max 100 requests in windowMs time
+});
 
+app.use(apiRateLimiter);
+app.use("/", routes);
+
+// Use errors from celebrate(uses Joi validation) module
 app.use(errors());
 
-process.on("uncaughtException", function(err) {
-  console.log("Caught exception: " + err);
+// 404 handler
+app.use((req, res) => {
+  return res.send(404, "404: Invalid request route");
+});
+
+process.on("uncaughtException", err => {
+  logger.error(`Caught exception: ${err}`);
 });
 
 module.exports = app;
