@@ -30,7 +30,7 @@ describe("POST /api/v1/alerts/send", () => {
   it("should send an email", async () => {
     const response = await request(app)
       .post(v1Routes.alerts.send)
-      .send({
+      .send([{
         alertName: "Test",
         alertMessage: "Test",
         deliveryMethods: ["email"],
@@ -48,7 +48,7 @@ describe("POST /api/v1/alerts/send", () => {
             email: "sai@gkaccess.com"
           }
         ]
-      });
+      }]);
 
     expect(response.status).toBe(200);
   });
