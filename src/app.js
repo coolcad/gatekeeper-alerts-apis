@@ -37,7 +37,11 @@ app.use((req, res) => {
 });
 
 process.on("uncaughtException", err => {
-  logger.error(`Caught exception: ${err}`);
+  logger.error(`Caught exception: ${err.message}`);
+});
+
+process.on("unhandledRejection", err => {
+  logger.error(`Unhandled Rejection: ${err.message}`);
 });
 
 module.exports = app;
