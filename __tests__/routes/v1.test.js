@@ -1,3 +1,4 @@
+require("dotenv").config();
 const request = require("supertest");
 const app = require("../../src/app");
 
@@ -34,7 +35,7 @@ describe("POST /api/v1/alerts/send", () => {
     expect(response.status).toBe(400);
   });
 
-  it("should send an email", async () => {
+  it.skip("should send an email", async () => {
     const response = await request(app)
       .post(v1Routes.alerts.send)
       .send([
@@ -54,6 +55,35 @@ describe("POST /api/v1/alerts/send", () => {
             {
               name: "Sai",
               email: "sai@gkaccess.com"
+            }
+          ]
+        }
+      ]);
+
+    expect(response.status).toBe(200);
+  });
+
+  it.skip("should send an sms", async () => {
+    const response = await request(app)
+      .post(v1Routes.alerts.send)
+      .send([
+        {
+          alertName: "Test",
+          alertMessage: "Test",
+          deliveryMethods: ["sms"],
+          alertLogs: [
+            {
+              alertDateTime: "2019-02-22T11:38:08.2867789-05:00",
+              eventType: "Service Started",
+              computerName: "DEVELOPER",
+              userName: "N/A"
+            }
+          ],
+          receivers: [
+            {
+              name: "Sai",
+              email: "sai@gkaccess.com",
+              phoneNumber: "+16824722966"
             }
           ]
         }
