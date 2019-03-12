@@ -6,7 +6,7 @@
     "dev": "nodemon -r dotenv/config ./src/bin/www",
     "start": "node ./src/bin/www",
     "debug": "node --nolazy --inspect-brk=9229 ./src/bin/www",
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch --detectOpenHandles",
     "test:coverage": "jest --collectCoverage",
     "lint": "./node_modules/.bin/eslint src/**",
@@ -36,8 +36,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint",
-      "pre-push": "npm test"
+      "pre-commit": "npm run lint"
     }
   },
   "devDependencies": {
