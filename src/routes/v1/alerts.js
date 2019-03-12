@@ -12,12 +12,17 @@ const validators = require("./validators");
 router.post("/send", validators.alert(), async (req, res) => {
   try {
     const alerts = req.body;
+    const invalidExternalIdError = new Error(
+      "Your license does not support GateKeeper Alerts. Please contact support@gkaccess.com to get a new license."
+    );
     const externalLicenseId = req.header("Authorization");
+
+    if (!externalLicenseId) {
+      throw invalidExternalIdError;
+    }
     const isValidExternalId = await DBUtils.isValidExternalLicenseId(externalLicenseId);
     if (!isValidExternalId) {
-      throw new Error(
-        "Your license does not support GateKeeper Alerts. Please contact support@gkaccess.com to get a new license."
-      );
+      throw invalidExternalIdError;
     }
     const alertDeliveryActions = alerts.map(async alert => {
       // Send Email, SMS only if email/sms is passed in request
