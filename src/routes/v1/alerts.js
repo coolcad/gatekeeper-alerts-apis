@@ -2,6 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 const logger = require("winston");
+// const License = require("../../models/license");
+const DBUtils = require("../../db/utils");
 const emailControllers = require("../../controllers/v1/alerts/emailControllers");
 const smsControllers = require("../../controllers/v1/alerts/smsControllers");
 const validators = require("./validators");
@@ -10,6 +12,13 @@ const validators = require("./validators");
 router.post("/send", validators.alert(), async (req, res) => {
   try {
     const alerts = req.body;
+    const externalLicenseId = req.header("Authorization");
+    const isValidExternalId = await DBUtils.isValidExternalLicenseId(externalLicenseId);
+    if (!isValidExternalId) {
+      throw new Error(
+        "Your license does not support GateKeeper Alerts. Please contact support@gkaccess.com to get a new license."
+      );
+    }
     const alertDeliveryActions = alerts.map(async alert => {
       // Send Email, SMS only if email/sms is passed in request
       if (alert.deliveryMethods.includes("email")) {

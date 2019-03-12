@@ -5,7 +5,11 @@ const morgan = require("morgan");
 const { errors } = require("celebrate");
 const rateLimit = require("express-rate-limit");
 const logger = require("winston");
+const mongoose = require("mongoose");
+
+mongoose.Promise = Promise;
 const routes = require("./routes");
+const config = require("./config/config");
 
 const app = express();
 
@@ -14,6 +18,36 @@ app.use(helmet());
 
 app.use(morgan("dev"));
 require("./helpers/logger");
+
+mongoose.connect(config.databaseUri, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  socketTimeoutMS: 30000,
+  keepAlive: true,
+  reconnectTries: 30000,
+  poolSize: 10
+});
+const db = mongoose.connection;
+
+db.on("error", () => {
+  logger.error("connection error:");
+});
+
+db.once("open", () => {
+  logger.info("Opened connection to mongo database");
+});
+
+db.on("connected", () => {
+  logger.info("Connected to mongo database:");
+});
+
+db.on("reconnected", () => {
+  logger.info("Reconnected to mongo database:");
+});
+
+db.on("disconnected", () => {
+  logger.error("Disconnected from mongo database");
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -5,5 +5,6 @@ module.exports = {
     clientSecret: process.env.ALERTS_GOOGLE_CLIENT_SECRET,
     refreshToken: process.env.ALERTS_GOOGLE_REFRESH_TOKEN,
     accessToken: process.env.ALERTS_GOOGLE_ACCESS_TOKEN
-  }
+  },
+  databaseUri: process.env.MONGO_DB_CONN_STRING
 };
