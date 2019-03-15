@@ -7,6 +7,9 @@ validators.alert = () => {
     body: Joi.array().items(
       Joi.object().keys({
         alertName: Joi.string().required(),
+        alertDescription: Joi.string()
+          .optional()
+          .allow(null),
         isSystemAlert: Joi.boolean().required(),
         deliveryMethods: Joi.array()
           .items(Joi.string().valid("sms", "email"))
