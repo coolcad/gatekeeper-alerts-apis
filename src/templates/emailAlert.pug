@@ -58,16 +58,26 @@ html(lang="en")
     div.divider
     table.table.details-table
       thead
-        th(width="25%") Timestamp
-        th(width="25%") Computer Name
-        th(width="25%") User Name
-        th(width="25%") Event
+        if alert.isSystemAlert
+          th(width="25%") Timestamp
+          th(width="25%") Event
+          th(width="50%") Message
+        else
+          th(width="25%") Timestamp
+          th(width="25%") Computer Name
+          th(width="25%") User Name
+          th(width="25%") Event
       tbody
         each log in alert.alertLogs
-          td(width="25%")= new Date(log.alertDateTime).toLocaleDateString() + " " +new Date(log.alertDateTime).toLocaleTimeString()
-          td(width="25%")= log.computerName
-          td(width="25%")= log.userName
-          td(width="25%")= log.eventType
+          if alert.isSystemAlert
+            td(width="25%")= new Date(log.alertDateTime).toLocaleDateString() + " " +new Date(log.alertDateTime).toLocaleTimeString()
+            td(width="25%")= log.eventType
+            td(width="50%")= log.alertMessage
+          else
+            td(width="25%")= new Date(log.alertDateTime).toLocaleDateString() + " " +new Date(log.alertDateTime).toLocaleTimeString()
+            td(width="25%")= log.computerName
+            td(width="25%")= log.userName
+            td(width="25%")= log.eventType
   
   div.divider
   div.divider

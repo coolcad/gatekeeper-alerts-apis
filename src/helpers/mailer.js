@@ -39,7 +39,7 @@ const sendMail = (opts, cb) => {
     if (err) {
       logger.error(err);
     } else {
-      logger.info("Email Alert sent");
+      logger.info(`Email Alert sent to ${opts.to}`);
     }
     cb(err);
     transporter.close();

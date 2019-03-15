@@ -7,7 +7,7 @@ validators.alert = () => {
     body: Joi.array().items(
       Joi.object().keys({
         alertName: Joi.string().required(),
-        alertMessage: Joi.string().required(),
+        isSystemAlert: Joi.boolean().required(),
         deliveryMethods: Joi.array()
           .items(Joi.string().valid("sms", "email"))
           .required(),
@@ -16,6 +16,13 @@ validators.alert = () => {
             alertDateTime: Joi.date()
               .iso()
               .required(),
+            alertMessage: Joi.string()
+              .optional()
+              .when("isSystemAlert", {
+                is: true,
+                then: Joi.string().required()
+              })
+              .default("N/A"),
             eventType: Joi.string().required(),
             computerName: Joi.string().required(),
             userName: Joi.string()

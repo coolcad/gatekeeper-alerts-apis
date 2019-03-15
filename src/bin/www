@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+// require("dotenv").config();
 const debug = require("debug")("gatekeeper-alerts-apis:server");
 const http = require("http");
 const logger = require("winston");
