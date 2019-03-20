@@ -34,11 +34,6 @@
   "jest": {
     "testEnvironment": "node"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run lint"
-    }
-  },
   "devDependencies": {
     "dotenv": "^6.1.0",
     "eslint": "^5.14.1",

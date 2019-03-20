@@ -7,7 +7,7 @@ require("winston-daily-rotate-file");
 const myFormat = printf(info => `${new Date(info.timestamp)}: ${info.level}: ${info.message}`);
 
 const rotateTransport = new winston.transports.DailyRotateFile({
-  filename: "./logs/%DATE%.log",
+  filename: "../logs/%DATE%.log",
   datePattern: "YYYY-MM-DD-HH",
   zippedArchive: true,
   maxSize: "20m",
