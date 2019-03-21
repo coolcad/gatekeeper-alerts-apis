@@ -23,7 +23,9 @@ const config = require("../config/config");
 // });
 
 const transporter = nodemailer.createTransport({
+  pool: true,
   service: "gmail",
+  logger: true,
   auth: {
     type: "OAuth2",
     user: config.xoauth2Options.user,
@@ -31,6 +33,15 @@ const transporter = nodemailer.createTransport({
     clientSecret: config.xoauth2Options.clientSecret,
     refreshToken: config.xoauth2Options.refreshToken,
     accessToken: config.xoauth2Options.accessToken
+  }
+});
+
+// verify connection configuration
+transporter.verify(function transportVerify(error) {
+  if (error) {
+    logger.error(error);
+  } else {
+    logger.info("Nodemailer transporter is ready to take our messages");
   }
 });
 
@@ -42,7 +53,6 @@ const sendMail = (opts, cb) => {
       logger.info(`Email Alert sent to ${opts.to}`);
     }
     cb(err);
-    transporter.close();
   });
 };
 
