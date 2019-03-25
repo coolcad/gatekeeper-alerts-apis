@@ -9,6 +9,7 @@ validators.alert = () => {
         alertName: Joi.string().required(),
         alertDescription: Joi.string()
           .optional()
+          .allow("")
           .allow(null),
         isSystemAlert: Joi.boolean().required(),
         deliveryMethods: Joi.array()
@@ -25,21 +26,26 @@ validators.alert = () => {
                 is: true,
                 then: Joi.string().required()
               })
+              .allow(null)
+              .allow("")
               .default("N/A"),
             eventType: Joi.string().required(),
-            computerName: Joi.string().required(),
-            userName: Joi.string()
+            computerName: Joi.string()
+              .required()
+              .allow(null),
+            userName: Joi.string().allow(null)
           })
         ),
         receivers: Joi.array()
           .items(
             Joi.object().keys({
-              name: Joi.string(),
+              name: Joi.string().allow(null),
               email: Joi.string()
                 .email()
                 .required(),
               phoneNumber: Joi.string()
                 .allow(null)
+                .allow("")
                 .optional()
             })
           )
