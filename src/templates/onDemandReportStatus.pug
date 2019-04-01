@@ -1,0 +1,51 @@
+doctype
+html(lang="en")
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    title GateKeeper Alert
+    style.
+      body {
+        padding: 20px;
+        background: #F1F1F1;
+        color: #263746;
+      }
+      .messageTitle {
+        font-size: 23px;
+      }
+      .successFailTitle {
+        padding: 0 0 0 10px;
+      }
+      .divider {
+        padding: 5px 0 5px 0;
+      }
+      th {
+        color: #263746;
+      }
+      .messageDescription{
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .text-danger {
+        color: #DC3545;
+      }
+      .text-success {
+        color: #28A745;
+      }
+      .text-left {
+        text-align: left;
+      }
+  body
+    //- img(src="https://gkreports.blob.core.windows.net/imagesforreports/icons/GKLogo.png")
+    table.w-100
+      thead
+        th.messageTitle.text-left
+          if report.success
+            span.text-success Success
+            div.messageDescription The Compliance Report you requested has been completed. Please go to /Reports in your GateKeeper Hub to see get the download link for the report.
+          else
+            span.text-danger Failed!
+            div.messageDescription The request for Compliance Report you requested has been failed. Please email support@gkaccess.com for assistance.
+    div.divider
+    div.divider

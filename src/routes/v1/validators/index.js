@@ -55,4 +55,28 @@ validators.alert = () => {
   });
 };
 
+validators.onDemandReportStatus = () => {
+  return celebrate({
+    body: Joi.object().keys({
+      success: Joi.boolean().required(),
+      receivers: Joi.array()
+        .items(
+          Joi.object().keys({
+            name: Joi.string()
+              .allow(null)
+              .optional(),
+            email: Joi.string()
+              .email()
+              .required(),
+            phoneNumber: Joi.string()
+              .allow(null)
+              .allow("")
+              .optional()
+          })
+        )
+        .required()
+    })
+  });
+};
+
 module.exports = validators;

@@ -7,6 +7,9 @@ const app = require("../../src/app");
 const v1Routes = {
   alerts: {
     send: `/api/v1/alerts/send`
+  },
+  notifications: {
+    onDemandReportStatus: `/api/v1/notifications/on-demand-report-status`
   }
 };
 
@@ -26,7 +29,45 @@ describe("Invalid Route is 404", () => {
   });
 });
 
-describe("POST /api/v1/alerts/send", () => {
+describe.only("POST /api/v1/notifications/on-demand-report-status", () => {
+  it("should fail with req body validation", async done => {
+    const response = await request(app).post(v1Routes.notifications.onDemandReportStatus);
+    expect(response.status).toBe(400);
+    done();
+  });
+  it("should send report generation success email", async done => {
+    const response = await request(app)
+      .post(v1Routes.notifications.onDemandReportStatus)
+      .send({
+        success: true,
+        receivers: [
+          {
+            name: "Sai",
+            email: "sai@gkaccess.com"
+          }
+        ]
+      });
+    expect(response.status).toBe(200);
+    done();
+  });
+  it("should send report generation failed email", async done => {
+    const response = await request(app)
+      .post(v1Routes.notifications.onDemandReportStatus)
+      .send({
+        success: false,
+        receivers: [
+          {
+            name: "Sai",
+            email: "sai@gkaccess.com"
+          }
+        ]
+      });
+    expect(response.status).toBe(200);
+    done();
+  });
+});
+
+describe.skip("POST /api/v1/alerts/send", () => {
   beforeAll(async done => {
     await mongoose.connect(config.databaseUri, {
       useNewUrlParser: true,
@@ -56,7 +97,7 @@ describe("POST /api/v1/alerts/send", () => {
     done();
   });
 
-  it.only("should throw error for wrong Authorization header", async done => {
+  it("should throw error for wrong Authorization header", async done => {
     const response = await request(app)
       .post(v1Routes.alerts.send)
       .set("Authorization", "c3eba8b4-4dde-49fa-9c4b-e138118f5a8a") // Its a wrong externalLicenseId
