@@ -56,6 +56,48 @@ const sendMail = (opts, cb) => {
   });
 };
 
+const sendServerIssueEmail = (type = "SERVER_DOWN", issueInfo = "") => {
+  // Send myself a notification email when server goes down
+  let subject = "";
+  let html = "";
+
+  switch (type) {
+    case "SERVER_DOWN": {
+      subject = "gkchain-apis DB connection down";
+      html = `<h3>${issueInfo}</h3>`;
+      break;
+    }
+    case "UNCAUGHT_EXCEPTION": {
+      subject = "gkchain-apis Uncaught Exception";
+      html = `<h3>${issueInfo}</h3>`;
+      break;
+    }
+
+    case "UNHANDLED_REJECTION": {
+      subject = "gkchain-apis Unhandled Rejection";
+      html = `<h3>${issueInfo}</h3>`;
+      break;
+    }
+    default:
+      break;
+  }
+
+  const opts = {
+    from: `GateKeeper Reports <${process.env.ALERTS_EMAIL_ID}>`,
+    to: "sai@gkaccess.com",
+    subject,
+    html
+  };
+  transporter.sendMail(opts, err => {
+    if (err) {
+      logger.error(err);
+    } else {
+      logger.info(`Email Alert sent to ${opts.to}`);
+    }
+  });
+};
+
 module.exports = {
-  sendMail
+  sendMail,
+  sendServerIssueEmail
 };

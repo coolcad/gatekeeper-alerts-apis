@@ -12,6 +12,9 @@
     "lint": "./node_modules/.bin/eslint src/**",
     "lint:fix": "./node_modules/.bin/eslint src/** --fix"
   },
+  "engines": {
+    "node": "10.14.1"
+  },
   "dependencies": {
     "axios": "^0.18.0",
     "celebrate": "^9.0.2",

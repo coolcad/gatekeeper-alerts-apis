@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 mongoose.Promise = Promise;
 const routes = require("./routes");
 const config = require("./config/config");
+const mailer = require("./helpers/mailer");
 
 const app = express();
 
@@ -47,6 +48,7 @@ db.on("reconnected", () => {
 
 db.on("disconnected", () => {
   logger.error("Disconnected from mongo database");
+  mailer.sendServerIssueEmail("SERVER_DOWN", "GK API Server DB connection down.");
 });
 
 app.use(express.json());
@@ -67,15 +69,17 @@ app.use(errors());
 
 // 404 handler
 app.use((req, res) => {
-  return res.send(404, "404: Invalid request route");
+  return res.status(404).send("404: Invalid request route");
 });
 
 process.on("uncaughtException", err => {
   logger.error(`Caught exception: ${err.message}`);
+  mailer.sendServerIssueEmail("UNCAUGHT_EXCEPTION", err.message);
 });
 
 process.on("unhandledRejection", err => {
   logger.error(`Unhandled Rejection: ${err.message}`);
+  mailer.sendServerIssueEmail("UNHANDLED_REJECTION", err.message);
 });
 
 module.exports = app;
