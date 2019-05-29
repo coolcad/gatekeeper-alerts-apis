@@ -79,4 +79,19 @@ validators.onDemandReportStatus = () => {
   });
 };
 
+validators.zendeskHelpSearch = () => {
+  return celebrate({
+    query: {
+      category: Joi.string()
+        .valid("hub", "client")
+        .allow(null)
+        .allow("")
+        .optional(),
+      query: Joi.string()
+        .allow("")
+        .required()
+    }
+  });
+};
+
 module.exports = validators;
