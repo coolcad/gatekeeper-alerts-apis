@@ -10,10 +10,13 @@ const v1Routes = {
   },
   notifications: {
     onDemandReportStatus: `/api/v1/notifications/on-demand-report-status`
+  },
+  zendesk: {
+    help: `/api/v1/zendesk/help`
   }
 };
 
-describe("Application is responsive", () => {
+describe.skip("Application is responsive", () => {
   it("GET /", async done => {
     const response = await request(app).get("/");
     expect(response.statusCode).toBe(200);
@@ -21,7 +24,7 @@ describe("Application is responsive", () => {
   });
 });
 
-describe("Invalid Route is 404", () => {
+describe.skip("Invalid Route is 404", () => {
   it("GET /doesnotexist", async done => {
     const response = await request(app).get("/doesnotexist");
     expect(response.statusCode).toBe(404);
@@ -29,7 +32,7 @@ describe("Invalid Route is 404", () => {
   });
 });
 
-describe.only("POST /api/v1/notifications/on-demand-report-status", () => {
+describe.skip("POST /api/v1/notifications/on-demand-report-status", () => {
   it("should fail with req body validation", async done => {
     const response = await request(app).post(v1Routes.notifications.onDemandReportStatus);
     expect(response.status).toBe(400);
@@ -185,6 +188,57 @@ describe.skip("POST /api/v1/alerts/send", () => {
       ]);
 
     expect(response.status).toBe(200);
+    done();
+  });
+});
+
+describe.only("GET /api/v1/zendesk/help", () => {
+  beforeAll(async done => {
+    await mongoose.connect(config.databaseUri, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      socketTimeoutMS: 30000,
+      keepAlive: true,
+      reconnectTries: 30000,
+      poolSize: 10
+    });
+    done();
+  });
+  afterAll(async done => {
+    await mongoose.connection.close();
+
+    done();
+  });
+  it("should fetch results for hub", async done => {
+    const response = await request(app)
+      .get(v1Routes.zendesk.help)
+      .query({
+        category: "hub",
+        query: "how to add users"
+      });
+    expect(response.status).toBe(200);
+    expect(response.body.data.results.length).toBeGreaterThan(0);
+    done();
+  });
+  it("should fetch results for client", async done => {
+    const response = await request(app)
+      .get(v1Routes.zendesk.help)
+      .query({
+        category: "client",
+        query: "how to add users"
+      });
+    expect(response.status).toBe(200);
+    expect(response.body.data.results.length).toBeGreaterThan(0);
+    done();
+  });
+  it("should fetch results for no category", async done => {
+    const response = await request(app)
+      .get(v1Routes.zendesk.help)
+      .query({
+        query: "how to add users"
+      });
+    expect(response.status).toBe(200);
+    expect(response.body.data.results.length).toBeGreaterThan(0);
     done();
   });
 });
